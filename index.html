@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>D&D Charaktererstellung</title>
+  <!-- Bootstrap CSS (optional, falls man es nutzen möchte) -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+  />
+  <style>
+    /* Einfaches CSS für bessere Übersicht */
+    .tooltip-hint {
+      cursor: pointer;
+      color: #007bff;
+      text-decoration: underline;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body class="container my-4">
+  <!-- 1) Nutzerkonto-System (Login/Registrierung) -->
+  <section id="user-auth">
+    <h1>D&D Charaktererstellungstool</h1>
+
+    <!-- Loginformular -->
+    <div id="login-form">
+      <h2>Login</h2>
+      <form>
+        <div class="mb-3">
+          <label for="login-email" class="form-label">E-Mail:</label>
+          <input type="email" class="form-control" id="login-email" required />
+        </div>
+        <div class="mb-3">
+          <label for="login-password" class="form-label">Passwort:</label>
+          <input type="password" class="form-control" id="login-password" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Einloggen</button>
+      </form>
+    </div>
+
+    <!-- Registrierungsformular -->
+    <div id="register-form" class="mt-4">
+      <h2>Registrieren</h2>
+      <form>
+        <div class="mb-3">
+          <label for="register-email" class="form-label">E-Mail:</label>
+          <input type="email" class="form-control" id="register-email" required />
+        </div>
+        <div class="mb-3">
+          <label for="register-password" class="form-label">Passwort:</label>
+          <input type="password" class="form-control" id="register-password" required />
+        </div>
+        <button type="submit" class="btn btn-success">Konto erstellen</button>
+      </form>
+    </div>
+  </section>
+
+  <hr />
+
+  <!-- 2) Charaktererstellungsformular -->
+  <section id="char-form" class="hidden">
+    <h2>Neuen Charakter erstellen</h2>
+    <form id="character-creation-form">
+      <!-- Beispielhaft ein paar Felder -->
+
+      <!-- Charaktername -->
+      <div class="mb-3">
+        <label for="char-name" class="form-label">
+          Charaktername
+          <span class="tooltip-hint" title="Name deines Helden">
+            [?]
+          </span>
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="char-name"
+          placeholder="z.B. Aramen Stormrider"
+          required
+        />
+      </div>
+
+      <!-- Volk (dynamisches Dropdown) -->
+      <div class="mb-3">
+        <label for="char-race" class="form-label">
+          Volk
+          <span class="tooltip-hint" title="Wähle aus verfügbaren D&D-Völkern">
+            [?]
+          </span>
+        </label>
+        <select class="form-select" id="char-race" required>
+          <option value="">--Bitte wählen--</option>
+          <option value="Mensch">Mensch</option>
+          <option value="Elf">Elf</option>
+          <option value="Zwerg">Zwerg</option>
+          <option value="Halbling">Halbling</option>
+          <!-- usw. -->
+        </select>
+      </div>
+
+      <!-- Klasse (ebenfalls dynamisch) -->
+      <div class="mb-3">
+        <label for="char-class" class="form-label">
+          Klasse
+          <span class="tooltip-hint" title="Wähle eine Klasse, z.B. Krieger">
+            [?]
+          </span>
+        </label>
+        <select class="form-select" id="char-class" required>
+          <option value="">--Bitte wählen--</option>
+          <option value="Krieger">Krieger</option>
+          <option value="Magier">Magier</option>
+          <option value="Schurke">Schurke</option>
+          <!-- usw. -->
+        </select>
+      </div>
+
+      <!-- Attribute (Beispiel: Stärke) -->
+      <div class="mb-3">
+        <label for="char-str" class="form-label">
+          Stärke
+          <span class="tooltip-hint" title="Wert zwischen 3 und 18 (bzw. generiert)">[?]</span>
+        </label>
+        <input
+          type="number"
+          class="form-control"
+          id="char-str"
+          min="3"
+          max="18"
+          required
+        />
+      </div>
+
+      <!-- Hintergrund (Dropdown oder Freitext) -->
+      <div class="mb-3">
+        <label for="char-background" class="form-label">
+          Hintergrund
+          <span class="tooltip-hint" title="Wähle einen vorgegebenen Hintergrund oder gib einen eigenen ein">
+            [?]
+          </span>
+        </label>
+        <select class="form-select" id="char-background">
+          <option value="">--Bitte wählen--</option>
+          <option value="Adliger">Adliger</option>
+          <option value="Soldat">Soldat</option>
+          <option value="Geächteter">Geächteter</option>
+          <!-- usw. -->
+        </select>
+      </div>
+
+      <!-- Fertigstellen und PDF generieren -->
+      <button type="submit" class="btn btn-primary">Charakter erstellen & PDF generieren</button>
+    </form>
+  </section>
+
+  <hr />
+
+  <!-- 3) Anzeige gespeicherter Charaktere im Nutzerkonto -->
+  <section id="user-characters" class="hidden">
+    <h2>Meine Charaktere</h2>
+    <ul id="character-list">
+      <!-- Dynamische Liste gespeicherter Charaktere -->
+    </ul>
+  </section>
+
+  <!-- 4) JavaScript für Dynamik, PDF-Generierung etc. -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Pseudocode, um Logik und PDF-Generierung zu veranschaulichen
+    // 1) Login-/Registrierungslogik (nur schematisch)
+    const loginForm = document.querySelector('#login-form form');
+    const registerForm = document.querySelector('#register-form form');
+    const charFormSection = document.getElementById('char-form');
+    const userCharsSection = document.getElementById('user-characters');
+
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      // Hier Server-Request fürs Einloggen ...
+      // Bei Erfolg:
+      charFormSection.classList.remove('hidden');
+      userCharsSection.classList.remove('hidden');
+    });
+
+    registerForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      // Hier Server-Request für Registrierung ...
+      // Bei Erfolg ggf. automatisch einloggen etc.
+      charFormSection.classList.remove('hidden');
+      userCharsSection.classList.remove('hidden');
+    });
+
+    // 2) Charaktererstellungsformular -> PDF generieren
+    const charCreationForm = document.getElementById('character-creation-form');
+    charCreationForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      // Formulardaten einsammeln
+      const name = document.getElementById('char-name').value;
+      const race = document.getElementById('char-race').value;
+      const charClass = document.getElementById('char-class').value;
+      const str = document.getElementById('char-str').value;
+      const background = document.getElementById('char-background').value;
+
+      // Hier könnte man z.B. PDFKit, jsPDF, PDF-Lib oder einen Server-Service nutzen
+      // um das PDF auszufüllen und zu erstellen. Beispielsweise:
+      // const doc = new jsPDF();
+      // doc.text(`Charaktername: ${name}`, 10, 10);
+      // ... usw. ...
+      // doc.save('charakterbogen.pdf');
+
+      // Charakter speichern (nur Beispiel, in echter App via Datenbank/Backend)
+      const li = document.createElement('li');
+      li.textContent = `${name} (${race} ${charClass})`;
+      document.getElementById('character-list').appendChild(li);
+      alert('Charakter erstellt und (fiktiv) als PDF gespeichert!');
+    });
+  </script>
+</body>
+</html>
